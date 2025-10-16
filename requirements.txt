@@ -1,0 +1,13 @@
+# Dépendances principales
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-dotenv>=1.0.0
+# Supabase
+supabase>=2.8.0
+postgrest>=0.18.0
+# Validation et modèles
+pydantic>=2.8.0
+# CORS et sécurité
+python-multipart>=0.0.6
+# Utilitaires
+httpx>=0.25.2
