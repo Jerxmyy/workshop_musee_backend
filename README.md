@@ -412,7 +412,7 @@ PRODUCTION_URL=https://workshop-musee-backend.vercel.app
 
 ## 📝 Licence
 
-Ce projet est développé dans le cadre de ma formation à l'ESD Paris, lors d'un workshop sur l'utilisation des APIs Open Data du Ministère de la Culture.
+Ce projet est développé dans le cadre de ma formation à l'ESD Paris, lors d'un workshop API utilisant l'API Open Data du Ministère de la Culture.
 
 ## 👥 Contribution
 
