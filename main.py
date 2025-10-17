@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from typing import Dict, Any, List
 import uvicorn
@@ -263,20 +262,6 @@ async def get_favourites_count(current_user: dict = Depends(get_current_user)):
 async def public_health():
     """Point de contrôle de santé publique"""
     return {"status": "healthy", "public": True}
-
-# Gestion spécifique des requêtes OPTIONS pour Vercel
-@app.options("/{path:path}")
-async def options_handler(path: str):
-    """Gestionnaire pour les requêtes OPTIONS (preflight CORS)"""
-    return JSONResponse(
-        content={},
-        headers={
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
-            "Access-Control-Max-Age": "86400",
-        }
-    )
 
 # Gestion des erreurs
 @app.exception_handler(404)
