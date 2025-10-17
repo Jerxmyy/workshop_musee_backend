@@ -22,7 +22,7 @@ API REST développée avec FastAPI pour la gestion des musées et des favoris ut
 ### 🛡️ Sécurité et validation
 
 - **Validation des données** : Contrôle strict avec Pydantic
-- **CORS configuré** : Sécurité cross-origin pour le frontend
+- **CORS dynamique** : Configuration automatique selon l'environnement
 - **Gestion d'erreurs** : Messages d'erreur clairs et structurés
 - **Tokens sécurisés** : Authentification JWT avec Supabase
 
@@ -105,7 +105,8 @@ SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 # Configuration CORS (optionnel)
-ALLOWED_ORIGIN=http://localhost:5173
+FRONTEND_URL=https://workshop-musee.vercel.app
+PRODUCTION_URL=https://www.votre-site.com
 ```
 
 ### Configuration Supabase
@@ -115,9 +116,56 @@ ALLOWED_ORIGIN=http://localhost:5173
 3. Configurez les variables d'environnement
 4. Créez les tables nécessaires (voir section Base de données)
 
+### Configuration CORS Dynamique
+
+L'API s'adapte automatiquement à l'environnement (développement vs production) :
+
+#### Variables CORS principales
+
+- **`FRONTEND_URL`** : URL principale de votre frontend en production
+
+  - Exemple : `https://workshop-musee.vercel.app`
+  - Cette URL sera automatiquement ajoutée aux origines CORS autorisées
+
+#### URLs par défaut (développement)
+
+Les URLs suivantes sont toujours incluses pour le développement local :
+
+- `http://localhost:5173` (Vite/Vue)
+
+#### Configuration automatique
+
+**En développement :**
+
+```bash
+# Aucune variable d'environnement nécessaire
+# Les URLs localhost sont automatiquement incluses
+python main.py
+```
+
+**En production :**
+
+```bash
+# Définir l'URL de production
+export FRONTEND_URL="https://workshop-musee.vercel.app
+python main.py
+```
+
+**Configuration avancée :**
+
+```bash
+# URL principale
+export FRONTEND_URL="https://workshop-musee.vercel.app"
+
+# URL alternative
+export PRODUCTION_URL="https://workshop-musee-backend.vercel.app"
+
+python main.py
+```
+
 ### Personnalisation
 
-- **CORS** : Modifier `ALLOWED_ORIGINS` dans `main.py`
+- **CORS** : Modifier les variables d'environnement CORS
 - **Port** : Changer le port dans `uvicorn.run()`
 - **Logs** : Ajuster le niveau de log dans `uvicorn.run()`
 
@@ -333,47 +381,9 @@ Les logs sont affichés dans la console avec différents niveaux :
 SUPABASE_URL=your_production_supabase_url
 SUPABASE_ANON_KEY=your_production_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
-ALLOWED_ORIGIN=https://your-frontend-domain.com
+FRONTEND_URL=https://workshop-musee.vercel.app
+PRODUCTION_URL=https://workshop-musee-backend.vercel.app
 ```
-
-### Docker (optionnel)
-
-```dockerfile
-FROM python:3.9-slim
-
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-COPY . .
-EXPOSE 8000
-
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Déploiement sur Heroku
-
-```bash
-# Installer Heroku CLI
-# Créer une app Heroku
-heroku create your-app-name
-
-# Configurer les variables d'environnement
-heroku config:set SUPABASE_URL=your_url
-heroku config:set SUPABASE_ANON_KEY=your_key
-heroku config:set SUPABASE_SERVICE_ROLE_KEY=your_service_key
-
-# Déployer
-git push heroku main
-```
-
-## 🔧 Configuration CORS
-
-L'API est configurée pour accepter les requêtes depuis :
-
-- `http://localhost:5173` (Vite - développement)
-
-Pour ajouter d'autres origines, modifiez la liste `ALLOWED_ORIGINS` dans `main.py`.
 
 ## 📊 Post-mortem
 
@@ -383,7 +393,7 @@ Pour ajouter d'autres origines, modifiez la liste `ALLOWED_ORIGINS` dans `main.p
 2. **Gestion des tokens** : Implémentation du middleware d'authentification
 3. **Validation des données** : Mise en place de la validation Pydantic stricte
 4. **Gestion des erreurs** : Centralisation et standardisation des messages d'erreur
-5. **CORS** : Configuration pour permettre les requêtes cross-origin
+5. **CORS dynamique** : Configuration flexible pour différents environnements
 
 ### Solutions apportées
 
@@ -391,7 +401,6 @@ Pour ajouter d'autres origines, modifiez la liste `ALLOWED_ORIGINS` dans `main.p
 2. **Middleware robuste** : Vérification automatique des tokens JWT
 3. **Modèles Pydantic** : Validation stricte des données d'entrée et de sortie
 4. **Gestion d'erreurs centralisée** : Handlers d'exception personnalisés
-5. **Configuration CORS flexible** : Support de multiples origines
 
 ### Améliorations futures
 
