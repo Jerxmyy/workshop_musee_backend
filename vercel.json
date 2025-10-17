@@ -1,5 +1,5 @@
 {
-  "version": 2, // version de Vercel
+  "version": 2,
   "builds": [
     {
       "src": "main.py",
